@@ -1,263 +1,520 @@
 <!DOCTYPE html>
-<html lang="en" class="antialiased">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zaziza Console | Mission Control</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>Zaziza OS | Intelligent Enterprise Platform</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <script src="https://unpkg.com/lucide@latest"></script> <script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
                     colors: {
-                        navy: { 900: '#0b1120', 800: '#1e293b', 700: '#334155' },
-                        teal: { 500: '#14b8a6', 600: '#0d9488' }
-                    }
+                        navy: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+                        teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0b1120; color: #94a3b8; }
-        .sidebar-link.active { background: rgba(20, 184, 166, 0.1); color: #2dd4bf; border-right: 2px solid #2dd4bf; }
-        .glass-header { background: rgba(11, 17, 32, 0.8); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; }
-        /* Custom Scrollbar for Data Tables */
-        .scroller::-webkit-scrollbar { width: 6px; height: 6px; }
-        .scroller::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .animate-enter { animation: enter 0.3s ease-out forwards; }
+        @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .loader { border: 3px solid #1e293b; border-radius: 50%; border-top: 3px solid #14b8a6; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden text-sm">
+<body class="h-screen flex overflow-hidden selection:bg-teal-500 selection:text-white">
 
-    <aside class="w-64 bg-navy-900 border-r border-navy-800 flex flex-col justify-between hidden md:flex">
-        <div>
-            <div class="h-16 flex items-center px-6 border-b border-navy-800 gap-3">
-                <div class="w-8 h-8 bg-teal-500 rounded flex items-center justify-center text-white font-bold">Z</div>
-                <span class="text-white font-bold tracking-tight">PLATFORM</span>
+    <div id="auth-screen" class="fixed inset-0 z-[100] bg-navy-950 flex items-center justify-center">
+        <div class="w-full max-w-md p-8 animate-enter">
+            <div class="flex justify-center mb-8">
+                <div class="w-12 h-12 bg-gradient-to-tr from-teal-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-2xl">Z</div>
             </div>
-
-            <nav class="mt-6 space-y-1 px-2">
-                <a href="#" onclick="App.navigate('dashboard')" id="nav-dashboard" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded hover:bg-navy-800 transition-colors text-white">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                    Dashboard
-                </a>
-                <a href="#" onclick="App.navigate('clients')" id="nav-clients" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded hover:bg-navy-800 transition-colors">
-                    <i data-lucide="users" class="w-4 h-4"></i>
-                    Client Database
-                </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded hover:bg-navy-800 transition-colors">
-                    <i data-lucide="workflow" class="w-4 h-4"></i>
-                    Automations (3 Running)
-                </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded hover:bg-navy-800 transition-colors">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    Security & Logs
-                </a>
-            </nav>
+            <h2 class="text-center text-2xl font-bold text-white mb-2">Zaziza Operating System</h2>
+            <p class="text-center text-slate-500 mb-8">Secure Enterprise Login</p>
+            <form onsubmit="App.Auth.login(event)" class="space-y-4">
+                <input type="email" value="admin@zaziza.co.za" class="w-full bg-navy-900 border border-navy-700 rounded-lg px-4 py-3 text-white focus:border-teal-500 outline-none transition-colors" placeholder="Email Address">
+                <input type="password" value="password" class="w-full bg-navy-900 border border-navy-700 rounded-lg px-4 py-3 text-white focus:border-teal-500 outline-none transition-colors" placeholder="Password">
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 rounded-lg transition-all flex justify-center items-center gap-2">
+                    <span id="login-text">Authenticate</span>
+                    <div id="login-loader" class="loader hidden"></div>
+                </button>
+            </form>
+            <div class="mt-6 text-center text-xs text-slate-600">Protected by Zaziza Guard™ • 256-bit Encryption</div>
         </div>
+    </div>
 
-        <div class="p-4 border-t border-navy-800">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-slate-700"></div>
-                <div>
-                    <div class="text-white font-medium">Admin User</div>
-                    <div class="text-xs text-slate-500">root@zaziza.co.za</div>
-                </div>
-            </div>
-        </div>
-    </aside>
-
-    <main class="flex-1 flex flex-col relative overflow-hidden">
+    <div id="app-wrapper" class="flex w-full h-full hidden opacity-0 transition-opacity duration-500">
         
-        <header class="h-16 glass-header flex items-center justify-between px-8 z-20">
-            <div class="flex items-center gap-4 text-slate-500">
-                <span>Org: <strong>Zaziza Technologies</strong></span>
-                <span>/</span>
-                <span class="text-white">Overview</span>
+        <aside class="w-64 bg-navy-950 border-r border-navy-800 flex flex-col z-20">
+            <div class="h-16 flex items-center px-6 border-b border-navy-800 gap-3">
+                <div class="w-8 h-8 bg-teal-600 rounded flex items-center justify-center font-bold text-white">Z</div>
+                <span class="font-bold tracking-tight text-white">ZAZIZA OS</span>
             </div>
-            <div class="flex items-center gap-4">
-                <button class="flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded font-medium transition-colors">
-                    <i data-lucide="plus" class="w-4 h-4"></i> New Project
+
+            <nav class="flex-1 p-4 space-y-1">
+                <button onclick="App.Router.go('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-navy-800 hover:text-white transition-all text-sm font-medium">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                </button>
+                <button onclick="App.Router.go('clients')" id="nav-clients" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-navy-800 hover:text-white transition-all text-sm font-medium">
+                    <i data-lucide="users" class="w-4 h-4"></i> Client Database
+                </button>
+                <button onclick="App.Router.go('workflows')" id="nav-workflows" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-navy-800 hover:text-white transition-all text-sm font-medium">
+                    <i data-lucide="zap" class="w-4 h-4"></i> Automation Rules
+                </button>
+                <button onclick="App.Router.go('profile')" id="nav-profile" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-navy-800 hover:text-white transition-all text-sm font-medium">
+                    <i data-lucide="user-circle" class="w-4 h-4"></i> Admin Profile
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-navy-800">
+                <button onclick="App.Auth.logout()" class="flex items-center gap-2 text-slate-500 hover:text-red-400 text-xs w-full px-2">
+                    <i data-lucide="log-out" class="w-3 h-3"></i> Terminate Session
                 </button>
             </div>
-        </header>
+        </aside>
 
-        <div id="view-dashboard" class="flex-1 overflow-y-auto p-8 scroller">
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-navy-800 p-6 rounded-lg border border-navy-700">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-slate-400">Total Revenue (YTD)</span>
-                        <i data-lucide="dollar-sign" class="text-teal-500 w-5 h-5"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-white">R 485,200</div>
-                    <div class="text-xs text-green-400 mt-2 flex items-center gap-1">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i> +12% vs last month
+        <main class="flex-1 flex flex-col relative bg-navy-900">
+            <header class="h-16 glass flex items-center justify-between px-8 z-10">
+                <h2 id="page-title" class="text-lg font-semibold text-white">Overview</h2>
+                <div class="flex items-center gap-4">
+                    <div class="text-xs text-slate-500 hidden md:block">System Status: <span class="text-green-500 font-bold">OPTIMAL</span></div>
+                    <div class="h-8 w-px bg-navy-700"></div>
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="App.Router.go('profile')">
+                        <div class="w-8 h-8 rounded-full bg-teal-900 text-teal-200 flex items-center justify-center text-xs font-bold border border-teal-700">AD</div>
                     </div>
                 </div>
-                
-                <div class="bg-navy-800 p-6 rounded-lg border border-navy-700">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-slate-400">Active Automations</span>
-                        <i data-lucide="cpu" class="text-teal-500 w-5 h-5"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-white">24 / 30</div>
-                    <div class="text-xs text-slate-500 mt-2">Server Load: 14%</div>
-                </div>
+            </header>
 
-                <div class="bg-navy-800 p-6 rounded-lg border border-navy-700">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-slate-400">Client Retainer</span>
-                        <i data-lucide="users" class="text-teal-500 w-5 h-5"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-white">18 Active</div>
-                    <div class="text-xs text-slate-500 mt-2">2 Onboarding</div>
+            <div id="main-view" class="flex-1 overflow-y-auto p-8 relative">
                 </div>
+        </main>
+    </div>
+
+    <div id="clientModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" onclick="App.UI.closeModal('clientModal')"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-navy-900 border border-navy-700 rounded-xl shadow-2xl p-6 animate-enter">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modal-title" class="text-xl font-bold text-white">Client Record</h3>
+                <button onclick="App.UI.closeModal('clientModal')" class="text-slate-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-96 mb-8">
-                <div class="lg:col-span-2 bg-navy-800 p-6 rounded-lg border border-navy-700 flex flex-col">
-                    <h3 class="text-white font-medium mb-4">Automation Efficiency & Revenue</h3>
-                    <div class="flex-1 relative">
-                        <canvas id="revenueChart"></canvas>
+            <form id="client-form" onsubmit="App.Clients.save(event)">
+                <input type="hidden" name="id" id="client-id">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Company Name</label>
+                        <input type="text" name="name" id="client-name" required class="w-full bg-navy-950 border border-navy-700 rounded-lg px-4 py-2 text-white focus:border-teal-500 outline-none">
                     </div>
-                </div>
-
-                <div class="bg-navy-900 p-0 rounded-lg border border-navy-700 overflow-hidden flex flex-col">
-                    <div class="p-4 border-b border-navy-800 bg-navy-800">
-                        <h3 class="text-white font-medium">Live Server Logs</h3>
-                    </div>
-                    <div class="flex-1 overflow-y-auto p-4 font-mono text-xs space-y-3" id="console-logs">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Status</label>
+                            <select name="status" id="client-status" class="w-full bg-navy-950 border border-navy-700 rounded-lg px-4 py-2 text-white focus:border-teal-500 outline-none">
+                                <option value="Active">Active</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Onboarding">Onboarding</option>
+                            </select>
                         </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Retainer (ZAR)</label>
+                            <input type="number" name="revenue" id="client-revenue" required class="w-full bg-navy-950 border border-navy-700 rounded-lg px-4 py-2 text-white focus:border-teal-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Contact Email</label>
+                        <input type="email" name="email" id="client-email" required class="w-full bg-navy-950 border border-navy-700 rounded-lg px-4 py-2 text-white focus:border-teal-500 outline-none">
+                    </div>
                 </div>
-            </div>
-
-            <div class="bg-navy-800 rounded-lg border border-navy-700 overflow-hidden">
-                <div class="p-6 border-b border-navy-700 flex justify-between items-center">
-                    <h3 class="text-white font-medium">Recent Invoices</h3>
-                    <button class="text-teal-500 hover:text-white transition-colors">View All</button>
+                <div class="mt-8 flex gap-3 justify-end">
+                    <button type="button" onclick="App.UI.closeModal('clientModal')" class="px-4 py-2 text-slate-400 hover:text-white text-sm">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-medium text-sm transition-colors shadow-lg shadow-teal-900/50">Save & Trigger Logic</button>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-navy-900 text-slate-400 uppercase text-xs font-semibold">
-                            <tr>
-                                <th class="px-6 py-4">Invoice ID</th>
-                                <th class="px-6 py-4">Client</th>
-                                <th class="px-6 py-4">Date</th>
-                                <th class="px-6 py-4">Amount</th>
-                                <th class="px-6 py-4">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-navy-700">
-                            <tr class="hover:bg-navy-700/50 transition-colors">
-                                <td class="px-6 py-4 font-mono text-slate-300">#INV-2024-001</td>
-                                <td class="px-6 py-4 text-white">SME Logistics Co.</td>
-                                <td class="px-6 py-4">Oct 24, 2025</td>
-                                <td class="px-6 py-4">R 12,500</td>
-                                <td class="px-6 py-4"><span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs">Paid</span></td>
-                            </tr>
-                            <tr class="hover:bg-navy-700/50 transition-colors">
-                                <td class="px-6 py-4 font-mono text-slate-300">#INV-2024-002</td>
-                                <td class="px-6 py-4 text-white">Dr. J. Nkosi Practice</td>
-                                <td class="px-6 py-4">Oct 22, 2025</td>
-                                <td class="px-6 py-4">R 4,500</td>
-                                <td class="px-6 py-4"><span class="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-xs">Pending</span></td>
-                            </tr>
-                             <tr class="hover:bg-navy-700/50 transition-colors">
-                                <td class="px-6 py-4 font-mono text-slate-300">#INV-2024-003</td>
-                                <td class="px-6 py-4 text-white">Cape Coffee Roasters</td>
-                                <td class="px-6 py-4">Oct 20, 2025</td>
-                                <td class="px-6 py-4">R 8,200</td>
-                                <td class="px-6 py-4"><span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs">Paid</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </form>
         </div>
+    </div>
 
-    </main>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[60] space-y-3 pointer-events-none"></div>
 
     <script>
-        // 1. Initialize Icons
-        lucide.createIcons();
-
-        // 2. Chart.js Implementation (Real Data Viz)
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        const revenueChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-                datasets: [{
-                    label: 'Revenue (ZAR)',
-                    data: [12000, 19000, 15000, 25000, 22000, 30000, 45000, 48000],
-                    borderColor: '#14b8a6',
-                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4 // Smooth curve
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
-                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                }
-            }
-        });
-
-        // 3. Live Server Log Simulation
-        const logs = [
-            "[System] Database connection established (ZA-South-1)",
-            "[Auth] User login: admin@zaziza.co.za",
-            "[Cron] Invoice generation started...",
-            "[Cron] 3 Invoices sent successfully.",
-            "[API] GET /v1/clients - 200 OK",
-            "[Security] Handshake verified.",
-        ];
-        
-        const logContainer = document.getElementById('console-logs');
-        
-        // Populate initial logs
-        logs.forEach(log => addLog(log));
-
-        function addLog(text) {
-            const div = document.createElement('div');
-            // Timestamp
-            const time = new Date().toLocaleTimeString('en-ZA', {hour12: false});
-            div.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="${text.includes('Error') ? 'text-red-400' : 'text-teal-400'}">${text}</span>`;
-            logContainer.prepend(div);
-        }
-
-        // Add random logs every few seconds to make it feel "alive"
-        setInterval(() => {
-            const events = [
-                "Syncing Xero Data...",
-                "Backup completed.",
-                "New lead captured from Landing Page.",
-                "API Health Check: Stable."
-            ];
-            const randomEvent = events[Math.floor(Math.random() * events.length)];
-            addLog(randomEvent);
-        }, 4000);
-
-        // 4. Navigation Logic
         const App = {
-            navigate(page) {
-                // Update Sidebar
-                document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active', 'text-white', 'border-r-2'));
-                const activeNav = document.getElementById(`nav-${page}`);
-                if(activeNav) activeNav.classList.add('active', 'text-white');
-                
-                // In a real app, this would swap the #view-dashboard div content
-                console.log(`Navigating to ${page}...`);
+            // --- 1. DATABASE LAYER ---
+            DB: {
+                key: 'zaziza_ultimate_db',
+                get(table = 'clients') {
+                    const data = localStorage.getItem(this.key + '_' + table);
+                    if (!data) return this.seed(table);
+                    return JSON.parse(data);
+                },
+                save(table, data) {
+                    localStorage.setItem(this.key + '_' + table, JSON.stringify(data));
+                    return data;
+                },
+                seed(table) {
+                    // Seed initial data if DB is empty
+                    if (table === 'clients') {
+                        return [
+                            { id: 1709, name: 'Cape Logistics', status: 'Active', revenue: 15000, email: 'accounts@capelog.co.za', date: '2024-11-01' },
+                            { id: 1710, name: 'Jozi Tech Solutions', status: 'Pending', revenue: 8500, email: 'info@jozitech.io', date: '2025-01-15' }
+                        ];
+                    }
+                    if (table === 'workflows') {
+                        return [
+                            { id: 1, name: 'New Client Onboarding', trigger: 'CLIENT_CREATE', action: 'Send Welcome Kit', status: 'Active', runs: 142 },
+                            { id: 2, name: 'Overdue Invoice Chase', trigger: 'PAYMENT_MISSED', action: 'Email Reminder', status: 'Active', runs: 34 },
+                            { id: 3, name: 'VIP Status Upgrade', trigger: 'REVENUE_>_20k', action: 'Notify Admin', status: 'Paused', runs: 12 }
+                        ];
+                    }
+                    if (table === 'logs') return [];
+                    return [];
+                }
+            },
+
+            // --- 2. EVENT BUS (The "Brain") ---
+            Events: {
+                emit(eventName, payload) {
+                    console.log(`[Event Bus] Triggered: ${eventName}`, payload);
+                    
+                    // Check Workflows for matching triggers
+                    const workflows = App.DB.get('workflows');
+                    workflows.forEach(wf => {
+                        if (wf.status === 'Active' && wf.trigger === eventName) {
+                            App.Automation.run(wf, payload);
+                        }
+                    });
+                }
+            },
+
+            // --- 3. AUTOMATION ENGINE ---
+            Automation: {
+                run(workflow, payload) {
+                    // Simulate processing latency
+                    setTimeout(() => {
+                        // 1. Increment Run Count in DB
+                        const workflows = App.DB.get('workflows');
+                        const wfIndex = workflows.findIndex(w => w.id === workflow.id);
+                        if(wfIndex >= 0) {
+                            workflows[wfIndex].runs += 1;
+                            App.DB.save('workflows', workflows);
+                        }
+
+                        // 2. Show UI Feedback (The blue flash)
+                        App.UI.toast(`⚡ Executed: ${workflow.action}`, 'info');
+                        
+                        // 3. Write to System Log
+                        const logs = App.DB.get('logs');
+                        logs.unshift({
+                            time: new Date().toLocaleTimeString(),
+                            workflow: workflow.name,
+                            status: 'Success',
+                            details: `Triggered by ${payload.name || 'System'}`
+                        });
+                        App.DB.save('logs', logs.slice(0, 50)); // Limit log size
+
+                        // 4. If looking at Workflows view, refresh it to show new count/log
+                        if(App.Router.current === 'workflows') App.Router.go('workflows');
+
+                    }, 1500); // 1.5s delay to feel "real"
+                }
+            },
+
+            // --- 4. AUTH MODULE ---
+            Auth: {
+                login(e) {
+                    e.preventDefault();
+                    document.getElementById('login-text').classList.add('hidden');
+                    document.getElementById('login-loader').classList.remove('hidden');
+                    // Mock API call
+                    setTimeout(() => {
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('app-wrapper').classList.remove('hidden', 'opacity-0');
+                        App.Router.go('dashboard');
+                        App.UI.toast('Welcome back, Principal Architect.', 'success');
+                    }, 1000);
+                },
+                logout() { location.reload(); }
+            },
+
+            // --- 5. ROUTER & VIEW CONTROLLER ---
+            Router: {
+                current: 'dashboard',
+                go(route) {
+                    this.current = route;
+                    // Update Sidebar State
+                    document.querySelectorAll('.nav-item').forEach(el => {
+                        el.classList.remove('bg-navy-800', 'text-white');
+                        el.classList.add('text-slate-400');
+                    });
+                    const activeNav = document.getElementById(`nav-${route}`);
+                    if(activeNav) activeNav.classList.add('bg-navy-800', 'text-white');
+
+                    // Render Views
+                    const container = document.getElementById('main-view');
+                    const title = document.getElementById('page-title');
+                    
+                    if (route === 'dashboard') {
+                        title.innerText = 'Mission Control';
+                        container.innerHTML = App.Views.dashboard();
+                        App.Charts.render();
+                    } else if (route === 'clients') {
+                        title.innerText = 'Client Database';
+                        container.innerHTML = App.Views.clients();
+                    } else if (route === 'workflows') {
+                        title.innerText = 'Automation Logic';
+                        container.innerHTML = App.Views.workflows();
+                    } else if (route === 'profile') {
+                        title.innerText = 'System Profile';
+                        container.innerHTML = App.Views.profile();
+                    }
+                    lucide.createIcons();
+                }
+            },
+
+            // --- 6. VIEW TEMPLATES ---
+            Views: {
+                dashboard() {
+                    const clients = App.DB.get('clients');
+                    const totalRev = clients.reduce((sum, c) => sum + parseInt(c.revenue), 0);
+                    return `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-enter">
+                            <div class="bg-navy-800 p-6 rounded-xl border border-navy-700 shadow-lg">
+                                <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-2">Monthly Revenue</div>
+                                <div class="text-3xl font-bold text-white">R ${totalRev.toLocaleString()}</div>
+                            </div>
+                            <div class="bg-navy-800 p-6 rounded-xl border border-navy-700 shadow-lg">
+                                <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-2">Active Automations</div>
+                                <div class="text-3xl font-bold text-teal-400">${App.DB.get('workflows').filter(w => w.status === 'Active').length}</div>
+                            </div>
+                            <div class="bg-navy-800 p-6 rounded-xl border border-navy-700 shadow-lg">
+                                <div class="text-slate-400 text-xs uppercase font-bold tracking-wider mb-2">System Uptime</div>
+                                <div class="text-3xl font-bold text-blue-400">99.99%</div>
+                            </div>
+                        </div>
+                        <div class="bg-navy-800 p-6 rounded-xl border border-navy-700 h-96 animate-enter" style="animation-delay: 0.1s">
+                            <h3 class="text-white font-bold mb-4 text-sm">Revenue Trajectory</h3>
+                            <div class="relative h-[90%] w-full"><canvas id="mainChart"></canvas></div>
+                        </div>
+                    `;
+                },
+
+                clients() {
+                    const clients = App.DB.get('clients');
+                    const rows = clients.map(c => `
+                        <tr class="border-b border-navy-700 hover:bg-navy-700/50 transition-colors">
+                            <td class="px-6 py-4 text-white font-medium">${c.name}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-bold bg-teal-500/10 text-teal-400">${c.status}</span></td>
+                            <td class="px-6 py-4 text-slate-300 font-mono">R ${parseInt(c.revenue).toLocaleString()}</td>
+                            <td class="px-6 py-4 text-right">
+                                 <button onclick="App.Clients.delete(${c.id})" class="text-slate-400 hover:text-red-400"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    return `
+                        <div class="flex justify-between items-center mb-6 animate-enter">
+                            <div class="relative w-64">
+                                 <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
+                                 <input type="text" placeholder="Search..." onkeyup="App.UI.filterTable(this.value)" class="w-full bg-navy-800 border border-navy-700 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:border-teal-500 outline-none">
+                            </div>
+                            <button onclick="App.Clients.openModal()" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-teal-900/50 flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add Client
+                            </button>
+                        </div>
+                        <div class="bg-navy-800 rounded-xl border border-navy-700 overflow-hidden shadow-lg animate-enter">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-navy-900 text-xs uppercase text-slate-500 font-bold border-b border-navy-700">
+                                    <tr><th class="px-6 py-4">Company</th><th class="px-6 py-4">Status</th><th class="px-6 py-4">Retainer</th><th class="px-6 py-4 text-right">Actions</th></tr>
+                                </thead>
+                                <tbody id="client-table-body">${rows}</tbody>
+                            </table>
+                        </div>
+                    `;
+                },
+
+                workflows() {
+                    const workflows = App.DB.get('workflows');
+                    const logs = App.DB.get('logs');
+                    
+                    const wfRows = workflows.map(w => `
+                        <div class="flex items-center justify-between p-4 border-b border-navy-700 hover:bg-navy-700/30 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded bg-navy-900 border border-navy-700 flex items-center justify-center text-teal-500">
+                                    <i data-lucide="zap" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white font-medium">${w.name}</div>
+                                    <div class="text-xs text-slate-500 flex gap-2">
+                                        <span>IF: <strong class="text-slate-400">${w.trigger}</strong></span>
+                                        <span>THEN: <strong class="text-slate-400">${w.action}</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-right">
+                                    <div class="text-xs text-slate-500 uppercase">Executions</div>
+                                    <div class="text-white font-mono">${w.runs}</div>
+                                </div>
+                                <span class="px-2 py-1 rounded text-xs font-bold ${w.status === 'Active' ? 'bg-green-500/10 text-green-400' : 'bg-slate-700 text-slate-400'}">${w.status}</span>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    const logRows = logs.map(l => `
+                        <div class="text-xs font-mono py-2 border-b border-navy-800 flex justify-between">
+                            <span class="text-slate-500">${l.time}</span>
+                            <span class="text-teal-400">${l.workflow}</span>
+                            <span class="text-slate-400">${l.details}</span>
+                        </div>
+                    `).join('');
+
+                    return `
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-enter">
+                            <div class="lg:col-span-2">
+                                <div class="bg-navy-800 rounded-xl border border-navy-700 overflow-hidden shadow-lg">
+                                    <div class="p-4 border-b border-navy-700 flex justify-between items-center bg-navy-900">
+                                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Active Workflows</h3>
+                                        <button class="text-xs text-teal-400 hover:text-white">+ New Workflow</button>
+                                    </div>
+                                    <div>${wfRows}</div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-1">
+                                <div class="bg-navy-800 rounded-xl border border-navy-700 overflow-hidden shadow-lg h-full max-h-[500px] flex flex-col">
+                                    <div class="p-4 border-b border-navy-700 bg-navy-900">
+                                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Live Execution Log</h3>
+                                    </div>
+                                    <div class="p-4 overflow-y-auto flex-1 space-y-1">
+                                        ${logRows || '<span class="text-slate-600 text-xs">No activity logs yet. Trigger an action.</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                profile() {
+                    return `
+                        <div class="max-w-2xl animate-enter">
+                            <div class="bg-navy-800 rounded-xl border border-navy-700 p-8">
+                                <div class="flex items-center gap-6 mb-8">
+                                    <div class="w-20 h-20 rounded-full bg-teal-600 flex items-center justify-center text-2xl font-bold text-white border-4 border-navy-900 shadow-xl">AD</div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Admin User</h3>
+                                        <p class="text-slate-400 text-sm">Principal System Architect</p>
+                                        <div class="mt-2 flex gap-2">
+                                            <span class="px-2 py-0.5 bg-navy-900 border border-navy-700 rounded text-xs text-slate-300">Level 5 Access</span>
+                                            <span class="px-2 py-0.5 bg-navy-900 border border-navy-700 rounded text-xs text-slate-300">MFA Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-navy-700 pb-2">System Configuration</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div><div class="text-slate-300 font-medium">Dark Mode Enforcement</div><div class="text-xs text-slate-500">Force dark theme</div></div>
+                                        <div class="w-10 h-6 bg-teal-600 rounded-full relative"><div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div></div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div><div class="text-slate-300 font-medium">API Rate Limiting</div><div class="text-xs text-slate-500">Protect against DDOS</div></div>
+                                        <div class="w-10 h-6 bg-teal-600 rounded-full relative"><div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div></div>
+                                    </div>
+                                    <div class="pt-6"><button class="px-4 py-2 bg-navy-700 hover:bg-navy-600 text-white rounded text-sm transition-colors">Reset Cache</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            },
+
+            // --- 7. CLIENT LOGIC + EVENT TRIGGERING ---
+            Clients: {
+                openModal() {
+                    const modal = document.getElementById('clientModal');
+                    document.getElementById('client-form').reset();
+                    modal.classList.remove('hidden');
+                },
+                save(e) {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const clients = App.DB.get('clients');
+
+                    const newClient = {
+                        id: Date.now(),
+                        name: formData.get('name'),
+                        status: formData.get('status'),
+                        revenue: formData.get('revenue'),
+                        email: formData.get('email'),
+                        date: new Date().toISOString()
+                    };
+
+                    clients.unshift(newClient);
+                    App.DB.save('clients', clients);
+                    App.UI.closeModal('clientModal');
+                    App.Router.go('clients');
+                    App.UI.toast('Client Added Successfully.', 'success');
+
+                    // *** TRIGGER THE AUTOMATION ***
+                    App.Events.emit('CLIENT_CREATE', newClient);
+                },
+                delete(id) {
+                    if(confirm('Delete record?')) {
+                        const clients = App.DB.get('clients').filter(c => c.id !== id);
+                        App.DB.save('clients', clients);
+                        App.Router.go('clients');
+                    }
+                }
+            },
+
+            // --- 8. UI HELPERS ---
+            UI: {
+                closeModal(id) { document.getElementById(id).classList.add('hidden'); },
+                filterTable(val) {
+                    const term = val.toLowerCase();
+                    document.querySelectorAll('tbody tr').forEach(row => {
+                        row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+                    });
+                },
+                toast(msg, type) {
+                    const container = document.getElementById('toast-container');
+                    const el = document.createElement('div');
+                    const bg = type === 'info' ? 'bg-blue-600' : (type === 'success' ? 'bg-teal-600' : 'bg-red-600');
+                    const icon = type === 'info' ? 'zap' : 'check-circle';
+                    el.className = `${bg} text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3 text-sm font-medium animate-enter pointer-events-auto`;
+                    el.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i> ${msg}`;
+                    container.appendChild(el);
+                    lucide.createIcons();
+                    setTimeout(() => el.remove(), 4000);
+                }
+            },
+
+            // --- 9. CHARTS ---
+            Charts: {
+                render() {
+                    const ctx = document.getElementById('mainChart');
+                    if(!ctx) return;
+                    const clients = App.DB.get('clients');
+                    const total = clients.reduce((sum, c) => sum + parseInt(c.revenue), 0);
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                data: [total*0.8, total*0.9, total, total*1.05, total*1.1, total*1.15, total*1.2],
+                                borderColor: '#14b8a6',
+                                backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#1e293b' } } } }
+                    });
+                }
             }
         };
     </script>
