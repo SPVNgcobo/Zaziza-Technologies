@@ -1,309 +1,547 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zaziza Tech - Digitize. Automate. Optimize.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Zaziza Technologies: Enterprise-grade automation and digital transformation for South African SMEs.">
+    <meta name="theme-color" content="#0f172a">
+    
+    <title>Zaziza Technologies | Intelligent Enterprise Systems</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#020617', // Darker, richer background
+                            800: '#0f172a',
+                            700: '#1e293b',
+                        },
+                        teal: {
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            glow: 'rgba(20, 184, 166, 0.5)'
+                        },
+                        gold: '#f59e0b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'], // For code snippets
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-up': 'fadeUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* ENGINEERING BEST PRACTICES: CSS VARIABLES & UTILITIES */
+        :root {
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --neon-glow: 0 0 20px rgba(20, 184, 166, 0.15);
         }
-        .gradient-text {
-            background: linear-gradient(to right, #4F46E5, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        /* Hide scrollbar for cleaner UI but allow scrolling */
+        body::-webkit-scrollbar { width: 8px; }
+        body::-webkit-scrollbar-track { background: #020617; }
+        body::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        body::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: var(--glass-border);
         }
-        .cta-button {
-            transition: all 0.3s ease;
+
+        /* Subtle grid background for tech feel */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
         }
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .step-card {
-             transition: all 0.3s ease-in-out;
-             border-color: transparent;
-        }
-        .step-card:hover {
-            transform: scale(1.05);
-            border-color: #4F46E5;
-        }
-        .pricing-card {
-            transition: all 0.3s ease-in-out;
-        }
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-        .pricing-popular {
-            border-color: #EC4899;
-        }
+
+        /* Utility for observer animations */
+        .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-navy-900 text-slate-300 selection:bg-teal-500 selection:text-white overflow-x-hidden">
 
-    <!-- Header -->
-    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-white">🚀 Zaziza Tech</h1>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#services" class="hover:text-indigo-400 transition-colors">Services</a>
-                <a href="#pricing" class="hover:text-indigo-400 transition-colors">Pricing</a>
-                <a href="#contact" class="hover:text-indigo-400 transition-colors">Contact</a>
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+        <div class="absolute inset-0 bg-grid-pattern z-0 opacity-40"></div>
+    </div>
+
+    <header id="main-header" class="fixed w-full z-50 transition-all duration-300 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="relative w-10 h-10 bg-gradient-to-tr from-teal-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-teal-500/20 transition-all">
+                    Z
+                    <div class="absolute inset-0 border border-white/20 rounded-lg"></div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white font-bold tracking-tight leading-none text-lg">ZAZIZA</span>
+                    <span class="text-xs text-slate-500 font-mono tracking-widest uppercase group-hover:text-teal-400 transition-colors">sys.io</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#solutions" class="hover:text-teal-400 transition-colors">Solutions</a>
+                <a href="#platform" class="hover:text-teal-400 transition-colors">Platform</a>
+                <a href="#legacy" class="hover:text-teal-400 transition-colors">Legacy</a>
+                
+                <div class="h-5 w-px bg-slate-700 mx-2"></div>
+                
+                <button onclick="ZazizaApp.ui.toggleModal('login-modal')" class="text-white hover:text-teal-400 transition-colors">Client Login</button>
+                <a href="#deploy" class="bg-teal-500 hover:bg-teal-400 text-navy-900 font-bold py-2.5 px-6 rounded-md shadow-lg shadow-teal-500/20 transition-all transform hover:-translate-y-0.5">
+                    Start Project
+                </a>
             </nav>
-            <a href="#contact" class="hidden md:inline-block bg-indigo-600 text-white font-semibold px-5 py-2 rounded-lg cta-button">Get a Free Quote</a>
+
+            <button class="md:hidden text-white" aria-label="Open Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
+            </button>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <main class="pt-20 pb-24 bg-gray-900">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-                Transform your business in <span class="gradient-text">3 simple steps.</span>
-            </h2>
-            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-                We help South African businesses save time, cut costs, and drive growth with smart, simple AI solutions.
-            </p>
-            <div class="mt-8 flex justify-center space-x-4">
-                <a href="#contact" class="bg-indigo-600 text-white font-bold px-8 py-4 rounded-lg cta-button text-lg">
-                    Book a Free Consultation
-                </a>
-                 <a href="#services" class="bg-gray-700 text-white font-bold px-8 py-4 rounded-lg cta-button text-lg">
-                    Learn More
-                </a>
-            </div>
-        </div>
-    </main>
+    <main class="relative z-10 pt-32">
 
-    <!-- Services Section (1-2-3 Transform) -->
-    <section id="services" class="py-20 bg-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl md:text-4xl font-bold text-white">Your AI Transformation Journey</h3>
-                <p class="mt-3 text-gray-400 max-w-2xl mx-auto">From paper chaos to predictive power, we guide you every step of the way.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Step 1: Digitize -->
-                <div class="bg-gray-900 p-8 rounded-xl border-t-4 border-transparent step-card">
-                    <div class="flex items-center">
-                        <span class="text-5xl font-extrabold text-indigo-400 mr-4">1</span>
-                        <h4 class="text-2xl font-bold text-white">Digitize <span class="text-base font-normal text-gray-400">(Foundation)</span></h4>
-                    </div>
-                    <p class="mt-4 text-gray-400">We convert your paper records—invoices, client forms, stock sheets—into secure, searchable digital assets using AI. Stored securely in the cloud for access anywhere, anytime.</p>
-                    <ul class="mt-6 space-y-2 text-gray-300">
-                        <li class="flex items-start"><span class="text-indigo-400 mr-2">✓</span> No more lost paperwork</li>
-                        <li class="flex items-start"><span class="text-indigo-400 mr-2">✓</span> Find any document in seconds</li>
-                        <li class="flex items-start"><span class="text-indigo-400 mr-2">✓</span> Save hours of manual searching</li>
-                    </ul>
+        <section class="max-w-7xl mx-auto px-6 py-20 lg:py-32 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 reveal-on-scroll">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-teal-400 text-xs font-mono">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                    </span>
+                    SYSTEM STATUS: OPTIMAL
                 </div>
 
-                <!-- Step 2: Automate -->
-                <div class="bg-gray-900 p-8 rounded-xl border-t-4 border-transparent step-card">
-                     <div class="flex items-center">
-                        <span class="text-5xl font-extrabold text-pink-500 mr-4">2</span>
-                        <h4 class="text-2xl font-bold text-white">Automate <span class="text-base font-normal text-gray-400">(Efficiency)</span></h4>
-                    </div>
-                    <p class="mt-4 text-gray-400">Implement AI-powered chatbots for 24/7 customer service, automate invoicing and payment reminders, and handle routine IT tasks without human intervention.</p>
-                    <ul class="mt-6 space-y-2 text-gray-300">
-                        <li class="flex items-start"><span class="text-pink-500 mr-2">✓</span> Engage customers 24/7</li>
-                        <li class="flex items-start"><span class="text-pink-500 mr-2">✓</span> Get paid faster</li>
-                        <li class="flex items-start"><span class="text-pink-500 mr-2">✓</span> Free up your staff for valuable work</li>
-                    </ul>
-                </div>
+                <h1 class="text-5xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1]">
+                    Engineer your <br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">Digital Legacy.</span>
+                </h1>
+                
+                <p class="text-lg text-slate-400 max-w-xl leading-relaxed">
+                    We replace manual SME chaos with intelligent, automated architecture. 
+                    From custom web apps to algorithmic workflow automation.
+                </p>
 
-                <!-- Step 3: Optimize -->
-                <div class="bg-gray-900 p-8 rounded-xl border-t-4 border-transparent step-card">
-                     <div class="flex items-center">
-                        <span class="text-5xl font-extrabold text-emerald-400 mr-4">3</span>
-                        <h4 class="text-2xl font-bold text-white">Optimize <span class="text-base font-normal text-gray-400">(Growth)</span></h4>
-                    </div>
-                    <p class="mt-4 text-gray-400">Get a "digital advisor" in your pocket. Our AI dashboards reveal sales trends, predict stock needs, and provide insights to help you make smarter, data-driven decisions.</p>
-                    <ul class="mt-6 space-y-2 text-gray-300">
-                         <li class="flex items-start"><span class="text-emerald-400 mr-2">✓</span> Get clarity on your business performance</li>
-                        <li class="flex items-start"><span class="text-emerald-400 mr-2">✓</span> Increase sales and cut costs</li>
-                        <li class="flex items-start"><span class="text-emerald-400 mr-2">✓</span> Reduce risks with predictive insights</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Real World Examples -->
-    <section class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl md:text-4xl font-bold text-white">Trusted by Local Businesses</h3>
-                <p class="mt-3 text-gray-400 max-w-2xl mx-auto">From workshops to retailers, we deliver real results.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8 text-center">
-                <div class="bg-gray-800 p-6 rounded-lg">
-                    <p class="text-6xl mb-2">🩺</p>
-                    <h4 class="font-bold text-xl text-white">Medical Practices</h4>
-                    <p class="text-gray-400 mt-2">A doctor's office digitized 2,000 patient files, making them instantly searchable and saving the front desk over 10 hours a week.</p>
-                </div>
-                 <div class="bg-gray-800 p-6 rounded-lg">
-                    <p class="text-6xl mb-2">🚗</p>
-                    <h4 class="font-bold text-xl text-white">Car Repair Shops</h4>
-                    <p class="text-gray-400 mt-2">An auto shop automated service reminders, boosting repeat customers by 25% and reducing no-shows significantly.</p>
-                </div>
-                 <div class="bg-gray-800 p-6 rounded-lg">
-                    <p class="text-6xl mb-2">🛍️</p>
-                    <h4 class="font-bold text-xl text-white">Retail Stores</h4>
-                    <p class="text-gray-400 mt-2">A retailer used sales insights to optimize promotions around payday, doubling revenue during peak weekends.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-20 bg-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h3 class="text-3xl md:text-4xl font-bold text-white">Simple, Scalable Pricing</h3>
-                <p class="mt-3 text-gray-400 max-w-2xl mx-auto">Choose the plan that's right for your business today, and grow with us tomorrow.</p>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
-                <!-- Starter Pack -->
-                <div class="bg-gray-900 p-8 rounded-xl pricing-card">
-                    <h4 class="font-bold text-2xl text-white">Starter Pack</h4>
-                    <p class="text-gray-400 mt-1">Digitize Only</p>
-                    <p class="text-4xl font-extrabold text-white mt-6">Once-off Fee</p>
-                    <p class="text-gray-400">Per batch of documents</p>
-                    <ul class="mt-8 space-y-3 text-gray-300">
-                        <li class="flex items-center"><span class="text-indigo-400 mr-3">✔</span> AI-Powered Document Scanning (OCR)</li>
-                        <li class="flex items-center"><span class="text-indigo-400 mr-3">✔</span> Secure Cloud Storage Setup</li>
-                        <li class="flex items-center"><span class="text-indigo-400 mr-3">✔</span> Digital Document Organization</li>
-                    </ul>
-                    <a href="#contact" class="mt-8 block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Get a Quote</a>
-                </div>
-
-                <!-- Automation Pack -->
-                <div class="bg-gray-900 p-8 rounded-xl pricing-card relative border-2 pricing-popular">
-                     <div class="absolute top-0 right-8 -mt-4 bg-pink-500 text-white text-sm font-bold px-4 py-1 rounded-full">MOST POPULAR</div>
-                    <h4 class="font-bold text-2xl text-white">Automation Pack</h4>
-                    <p class="text-gray-400 mt-1">Digitize + Automate</p>
-                    <p class="text-4xl font-extrabold text-white mt-6">R1,500 - R3,000</p>
-                    <p class="text-gray-400">Per month</p>
-                    <ul class="mt-8 space-y-3 text-gray-300">
-                        <li class="flex items-center"><span class="text-pink-500 mr-3">✔</span> <strong>Everything in Starter</strong></li>
-                        <li class="flex items-center"><span class="text-pink-500 mr-3">✔</span> AI Customer Service Chatbots</li>
-                        <li class="flex items-center"><span class="text-pink-500 mr-3">✔</span> Automated Invoicing & Reminders</li>
-                        <li class="flex items-center"><span class="text-pink-500 mr-3">✔</span> Automated Notifications (Email/SMS)</li>
-                    </ul>
-                    <a href="#contact" class="mt-8 block w-full text-center bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-lg transition-colors">Choose This Plan</a>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <button onclick="document.getElementById('calculator').scrollIntoView()" class="group relative px-8 py-3.5 bg-white text-navy-900 font-bold rounded-lg overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        <span class="relative z-10">Configure Your System</span>
+                    </button>
+                    <button class="px-8 py-3.5 border border-slate-700 text-white rounded-lg hover:bg-slate-800 hover:border-slate-600 transition-all flex items-center gap-2">
+                        <span>View Documentation</span>
+                        <svg class="w-4 h-4 text-slate-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
                 
-                <!-- Full 1-2-3 Transform -->
-                <div class="bg-gray-900 p-8 rounded-xl pricing-card">
-                    <h4 class="font-bold text-2xl text-white">Full 1-2-3 Transform</h4>
-                    <p class="text-gray-400 mt-1">Digitize + Automate + Optimize</p>
-                    <p class="text-4xl font-extrabold text-white mt-6">R3,500 - R7,000</p>
-                    <p class="text-gray-400">Per month</p>
-                    <ul class="mt-8 space-y-3 text-gray-300">
-                        <li class="flex items-center"><span class="text-emerald-400 mr-3">✔</span> <strong>Everything in Automation</strong></li>
-                        <li class="flex items-center"><span class="text-emerald-400 mr-3">✔</span> AI-Driven Performance Dashboards</li>
-                        <li class="flex items-center"><span class="text-emerald-400 mr-3">✔</span> Predictive Business Insights</li>
-                        <li class="flex items-center"><span class="text-emerald-400 mr-3">✔</span> Basic Cybersecurity & Compliance</li>
-                    </ul>
-                    <a href="#contact" class="mt-8 block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Choose This Plan</a>
+                <div class="pt-8 border-t border-slate-800 flex gap-8">
+                    <div>
+                        <p class="text-3xl font-bold text-white">99.9%</p>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-mono">Uptime</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-white">POPIA</p>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-mono">Compliant</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-white">&lt;100ms</p>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-mono">Latency</p>
+                    </div>
                 </div>
-
             </div>
-        </div>
-    </section>
 
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-900">
-        <div class="container mx-auto px-6">
-            <div class="bg-gray-800 rounded-2xl p-8 md:p-12 lg:flex lg:items-center lg:justify-between">
-                <div class="lg:w-1/2">
-                    <h3 class="text-3xl font-bold text-white">Ready to transform your business?</h3>
-                    <p class="mt-3 text-gray-400">Let's chat. We'll assess your needs and provide a free, no-obligation quote to show you how Zaziza Tech can help you grow.</p>
-                     <p class="mt-4 text-sm text-gray-500">Based in Kempton Park, Gauteng. Serving businesses across South Africa.</p>
+            <div class="relative reveal-on-scroll delay-200">
+                <div class="glass-panel rounded-xl p-1 border-slate-700/50 shadow-2xl shadow-teal-900/20 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <div class="bg-navy-900 rounded-lg p-6 font-mono text-sm overflow-hidden relative">
+                        <div class="flex gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div class="space-y-2 text-slate-400">
+                            <p><span class="text-purple-400">import</span> { <span class="text-yellow-300">Automation</span> } <span class="text-purple-400">from</span> <span class="text-green-400">'@zaziza/core'</span>;</p>
+                            <p class="text-slate-600">// Initialize Business Logic</p>
+                            <p><span class="text-blue-400">const</span> <span class="text-teal-400">enterprise</span> = <span class="text-purple-400">new</span> <span class="text-yellow-300">ZazizaClient</span>({</p>
+                            <p class="pl-4">mode: <span class="text-green-400">'scale'</span>,</p>
+                            <p class="pl-4">security: <span class="text-green-400">'enterprise-grade'</span>,</p>
+                            <p class="pl-4">legacy: <span class="text-blue-400">true</span></p>
+                            <p>});</p>
+                            <p class="animate-pulse text-teal-500 mt-4">> System compiling... Done.</p>
+                        </div>
+                        
+                        <div class="absolute bottom-6 right-6 bg-slate-800 p-4 rounded-lg border border-slate-600 shadow-xl max-w-xs">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs text-slate-400">Monthly Saved Hours</span>
+                                <span class="text-teal-400 font-bold">+120 hrs</span>
+                            </div>
+                            <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-teal-500 h-full w-[85%]"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-8 lg:mt-0 lg:w-1/2 lg:pl-12">
-                    <form id="contactForm" class="grid grid-cols-1 gap-y-6">
-                        <div>
-                            <label for="name" class="sr-only">Full name</label>
-                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 bg-gray-700 border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Full name" required>
+            </div>
+        </section>
+
+        <section id="solutions" class="py-24 relative bg-navy-800/30 border-y border-white/5">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-16 md:flex justify-between items-end reveal-on-scroll">
+                    <div class="max-w-2xl">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Enterprise Capabilities.<br/><span class="text-slate-500">Packaged for SMEs.</span></h2>
+                        <p class="text-slate-400">We don't just "make websites." We build scalable architectures that automate your revenue generation and protect your data.</p>
+                    </div>
+                    <a href="#" class="hidden md:inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors font-medium mt-4">
+                        Explore Full API <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="group p-8 rounded-2xl bg-navy-700/50 border border-slate-700 hover:border-teal-500/50 hover:bg-navy-700 transition-all duration-300 reveal-on-scroll delay-100">
+                        <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-teal-400 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                         </div>
-                        <div>
-                            <label for="email" class="sr-only">Email</label>
-                            <input id="email" name="email" type="email" autocomplete="email" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 bg-gray-700 border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Email address" required>
+                        <h3 class="text-xl font-bold text-white mb-3">Headless Web Apps</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            Next.js & React architectures. We build PWAs (Progressive Web Apps) that behave like native software, optimized for South African mobile data conditions.
+                        </p>
+                        <ul class="text-xs text-slate-500 font-mono space-y-2 border-t border-slate-700/50 pt-4">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>Server-Side Rendering</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>Edge Caching</li>
+                        </ul>
+                    </div>
+
+                    <div class="group p-8 rounded-2xl bg-navy-700/50 border border-slate-700 hover:border-teal-500/50 hover:bg-navy-700 transition-all duration-300 reveal-on-scroll delay-200">
+                        <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-teal-400 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                         </div>
-                         <div>
-                            <label for="phone" class="sr-only">Phone</label>
-                            <input type="text" name="phone" id="phone" autocomplete="tel" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 bg-gray-700 border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Phone number (Optional)">
+                        <h3 class="text-xl font-bold text-white mb-3">Workflow Automation</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            Python-based logic layers that connect your CRM, Email, and Invoicing. We remove the human error from your quotation process.
+                        </p>
+                        <ul class="text-xs text-slate-500 font-mono space-y-2 border-t border-slate-700/50 pt-4">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>CRON Job Scheduling</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>API Webhooks</li>
+                        </ul>
+                    </div>
+
+                    <div class="group p-8 rounded-2xl bg-navy-700/50 border border-slate-700 hover:border-teal-500/50 hover:bg-navy-700 transition-all duration-300 reveal-on-scroll delay-300">
+                        <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-teal-400 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Security & Compliance</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            SME-focused hardening. We implement POPIA-ready data structures, 2FA protocols, and secure encryption for client data.
+                        </p>
+                        <ul class="text-xs text-slate-500 font-mono space-y-2 border-t border-slate-700/50 pt-4">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>End-to-End Encryption</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-teal-500 rounded-full"></span>Access Control Lists</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="deploy" class="py-24 max-w-5xl mx-auto px-6">
+            <div id="calculator" class="bg-navy-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl reveal-on-scroll">
+                <div class="grid md:grid-cols-2">
+                    <div class="p-8 md:p-12 space-y-8">
                         <div>
-                            <label for="message" class="sr-only">Message</label>
-                            <textarea id="message" name="message" rows="4" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 bg-gray-700 border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Tell us a bit about your business and your needs..." required></textarea>
+                            <h2 class="text-2xl font-bold text-white mb-2">System Configuration</h2>
+                            <p class="text-slate-400 text-sm">Select modules to estimate your deployment costs.</p>
                         </div>
+
+                        <div class="space-y-6" id="config-form">
+                            <div class="flex items-center justify-between p-4 rounded-lg bg-navy-900 border border-slate-700 hover:border-slate-500 transition-colors cursor-pointer" onclick="ZazizaApp.calculator.toggle('web')">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="opt-web" class="w-5 h-5 accent-teal-500 bg-slate-800 border-slate-600 rounded" checked>
+                                    <div>
+                                        <div class="text-white font-medium">Core Web Platform</div>
+                                        <div class="text-xs text-slate-500">Next.js + Vercel Deployment</div>
+                                    </div>
+                                </div>
+                                <span class="text-teal-400 font-mono text-sm">R 6,500</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 rounded-lg bg-navy-900 border border-slate-700 hover:border-slate-500 transition-colors cursor-pointer" onclick="ZazizaApp.calculator.toggle('auto')">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="opt-auto" class="w-5 h-5 accent-teal-500 bg-slate-800 border-slate-600 rounded">
+                                    <div>
+                                        <div class="text-white font-medium">Automation Logic</div>
+                                        <div class="text-xs text-slate-500">Auto-Invoicing & CRM Sync</div>
+                                    </div>
+                                </div>
+                                <span class="text-teal-400 font-mono text-sm">R 4,500</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 rounded-lg bg-navy-900 border border-slate-700 hover:border-slate-500 transition-colors cursor-pointer" onclick="ZazizaApp.calculator.toggle('brand')">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="opt-brand" class="w-5 h-5 accent-teal-500 bg-slate-800 border-slate-600 rounded">
+                                    <div>
+                                        <div class="text-white font-medium">Identity System</div>
+                                        <div class="text-xs text-slate-500">Logo, Letterheads, UI Kit</div>
+                                    </div>
+                                </div>
+                                <span class="text-teal-400 font-mono text-sm">R 3,500</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-teal-900/20 to-navy-900 p-8 md:p-12 flex flex-col justify-between relative border-l border-slate-700">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" stroke="currentColor"><path d="M10 50h80M50 10v80" stroke-width="0.5"/></svg>
+                        </div>
+
                         <div>
-                            <button type="submit" class="w-full justify-center inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cta-button">
-                                Send My Request
+                            <span class="text-gold font-bold uppercase tracking-widest text-xs">Estimated Investment</span>
+                            <div class="mt-4 flex items-baseline gap-1">
+                                <span class="text-4xl md:text-5xl font-bold text-white tracking-tight" id="display-total">R 6,500</span>
+                                <span class="text-slate-400 text-sm">/ once-off</span>
+                            </div>
+                            <p class="mt-4 text-xs text-slate-400 leading-relaxed">
+                                *Includes technical SEO setup, mobile responsiveness, and 30-day post-deployment support. Excludes monthly hosting (approx R200/pm).
+                            </p>
+                        </div>
+
+                        <div class="mt-10">
+                            <button class="w-full bg-teal-500 hover:bg-teal-400 text-navy-900 font-bold py-4 rounded-lg shadow-lg shadow-teal-500/20 transition-all flex justify-center items-center gap-2">
+                                Initialize Scope
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </button>
                         </div>
-                         <p id="form-status" class="text-center text-sm mt-2"></p>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800">
-        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
-            <p>&copy; 2025 Zaziza Tech. All rights reserved.</p>
-            <p class="text-sm">Simplifying AI for South African SMEs.</p>
+        <footer id="legacy" class="border-t border-slate-800 bg-navy-900 pt-20 pb-10">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid md:grid-cols-4 gap-12 mb-16">
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="flex items-center gap-2 mb-6">
+                            <div class="w-8 h-8 bg-teal-500 rounded text-navy-900 font-bold flex items-center justify-center">Z</div>
+                            <span class="text-white font-bold tracking-tight">ZAZIZA TECHNOLOGIES</span>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-md mb-6">
+                            Named after Zizipho Aziza. Built on the principles of longevity, scalability, and engineering excellence. We are not just vendors; we are the architects of your digital future.
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-wider">Stack</h4>
+                        <ul class="space-y-3 text-sm text-slate-400">
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Next.js / React</a></li>
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Python Automation</a></li>
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Supabase (SQL)</a></li>
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Tailwind CSS</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-wider">Legal</h4>
+                        <ul class="space-y-3 text-sm text-slate-400">
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">POPIA Compliance</a></li>
+                            <li><a href="#" class="hover:text-teal-400 transition-colors">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600">
+                    <p>&copy; 2025 Zaziza Technologies (Pty) Ltd. All systems operational.</p>
+                    <div class="flex items-center gap-2 mt-4 md:mt-0">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span>Server Time: <script>document.write(new Date().toLocaleTimeString('en-ZA'))</script> SAST</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <dialog id="login-modal" class="bg-transparent p-0 backdrop:bg-slate-900/80 backdrop:backdrop-blur-sm">
+        <div class="bg-navy-800 border border-slate-700 rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-blue-500"></div>
+            
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white">Secure Access</h3>
+                <button onclick="ZazizaApp.ui.toggleModal('login-modal')" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <form class="space-y-4" onsubmit="event.preventDefault(); ZazizaApp.auth.login()">
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1 uppercase">Identity</label>
+                    <input type="email" class="w-full bg-navy-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors" placeholder="user@company.co.za">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1 uppercase">Key</label>
+                    <input type="password" class="w-full bg-navy-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors" placeholder="••••••••">
+                </div>
+                <button class="w-full bg-white text-navy-900 font-bold py-3 rounded-lg hover:bg-slate-200 transition-colors mt-2">
+                    Authenticate
+                </button>
+            </form>
+            
+            <div class="mt-6 flex items-center justify-center gap-2 text-xs text-slate-500">
+                <svg class="w-3 h-3 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                <span>256-bit Encryption Active</span>
+            </div>
         </div>
-    </footer>
+    </dialog>
 
     <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        /**
+         * ZazizaApp - Singleton Pattern
+         * Encapsulates logic to prevent global namespace pollution.
+         */
+        const ZazizaApp = {
+            config: {
+                prices: { web: 6500, auto: 4500, brand: 3500 },
+                currencyConfig: { style: 'currency', currency: 'ZAR', maximumFractionDigits: 0 }
+            },
+
+            // User Interface Controllers
+            ui: {
+                header: document.getElementById('main-header'),
+                
+                init() {
+                    this.setupIntersectionObserver();
+                    this.setupScrollListener();
+                },
+
+                // High-performance scroll listener using requestAnimationFrame implies (css transition handles smoothing)
+                setupScrollListener() {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 50) {
+                            this.header.classList.add('bg-navy-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-slate-800');
+                        } else {
+                            this.header.classList.remove('bg-navy-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-slate-800');
+                        }
+                    });
+                },
+
+                // IntersectionObserver for performant scroll animations
+                setupIntersectionObserver() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('reveal-visible');
+                                observer.unobserve(entry.target); // Optimize: only run once
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
+                },
+
+                toggleModal(id) {
+                    const modal = document.getElementById(id);
+                    modal.open ? modal.close() : modal.showModal();
+                }
+            },
+
+            // Logic for the Calculator Component
+            calculator: {
+                state: {
+                    web: true,
+                    auto: false,
+                    brand: false
+                },
+
+                toggle(key) {
+                    // Update State
+                    this.state[key] = !this.state[key];
+                    
+                    // Sync UI Checkbox
+                    const checkbox = document.getElementById(`opt-${key}`);
+                    if (checkbox.checked !== this.state[key]) {
+                        checkbox.checked = this.state[key];
+                    }
+
+                    this.recalculate();
+                },
+
+                recalculate() {
+                    let total = 0;
+                    if (this.state.web) total += ZazizaApp.config.prices.web;
+                    if (this.state.auto) total += ZazizaApp.config.prices.auto;
+                    if (this.state.brand) total += ZazizaApp.config.prices.brand;
+
+                    // Animate Value
+                    const display = document.getElementById('display-total');
+                    
+                    // Simple text animation
+                    display.style.opacity = 0.5;
+                    setTimeout(() => {
+                        display.innerText = new Intl.NumberFormat('en-ZA', ZazizaApp.config.currencyConfig).format(total);
+                        display.style.opacity = 1;
+                    }, 150);
+                }
+            },
+
+            // Mock Auth Module
+            auth: {
+                login() {
+                    const btn = document.querySelector('#login-modal button[type="submit"]');
+                    const originalText = btn.innerText;
+                    
+                    btn.disabled = true;
+                    btn.innerHTML = `<span class="animate-pulse">Verifying Credentials...</span>`;
+                    
+                    setTimeout(() => {
+                        alert('Zaziza Prototype: Database connection pending.');
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                        ZazizaApp.ui.toggleModal('login-modal');
+                    }, 1500);
+                }
+            },
+
+            init() {
+                this.ui.init();
+                
+                // Bind event listeners to checkboxes manually for accessibility
+                ['web', 'auto', 'brand'].forEach(key => {
+                    document.getElementById(`opt-${key}`).addEventListener('change', () => {
+                         // The onclick on the parent div handles logic, this just ensures sync if clicked directly
+                         this.state[key] = document.getElementById(`opt-${key}`).checked;
+                         this.calculator.recalculate();
+                    });
                 });
-            });
-        });
-
-        // Contact form submission handling
-        const form = document.getElementById('contactForm');
-        const statusEl = document.getElementById('form-status');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Basic validation check
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-
-            if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
-                statusEl.textContent = 'Please fill out all required fields.';
-                statusEl.style.color = '#F87171'; // text-red-400
-                return;
             }
+        };
 
-            // Simulate form submission
-            statusEl.textContent = 'Sending...';
-            statusEl.style.color = '#60A5FA'; // text-blue-400
-            
-            setTimeout(() => {
-                statusEl.textContent = "Thank you for your message! We'll be in touch soon.";
-                statusEl.style.color = '#34D399'; // text-green-400
-                form.reset();
-            }, 1500);
+        // Initialize Application on DOM Ready
+        document.addEventListener('DOMContentLoaded', () => {
+            ZazizaApp.init();
         });
     </script>
-
 </body>
 </html>
