@@ -1,3 +1,7 @@
+/**
+ * ZAZIZA NEXUS ENGINE v7.0 (GOLDEN MASTER)
+ */
+
 const App = {
     // --- 1. CENTRAL STORE (Database & Persistence) ---
     Store: {
